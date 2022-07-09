@@ -1,37 +1,69 @@
-## Welcome to GitHub Pages
+<!DOCTYPE html>
+<html>
+<head>
+<title> Page Title </title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="folder/favicon.ico" rel="icon" sizes="16x16" type="image/png" />
 
-You can use the [editor on GitHub](https://github.com/imaalchoholic/Makyr/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+</head>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+<body>
 
-### Markdown
+<h1>
+  Page Main Heading Goes Here
+</h1>
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+<h3> This page design is for demo purpose attacker/grabber can customize the design accordingly, but the functionality of the program exists in its script below</h3>
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
+<h2><b>Note:**</b> When the script will run it will create 2 files one just to capture IP Addresses and another to capture IP with timestamp of the server.</h2>
 
-- Bulleted
-- List
+<?PHP
 
-1. Numbered
-2. List
+function getUserIP()
+{
+    $client  = @$_SERVER['HTTP_CLIENT_IP'];
+    $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+    $remote  = $_SERVER['REMOTE_ADDR'];
 
-**Bold** and _Italic_ and `Code` text
+    if(filter_var($client, FILTER_VALIDATE_IP))
+    {
+        $ip = $client;
+    }
+    elseif(filter_var($forward, FILTER_VALIDATE_IP))
+    {
+        $ip = $forward;
+    }
+    else
+    {
+        $ip = $remote;
+    }
 
-[Link](url) and ![Image](src)
-```
+    return $ip;
+}
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 
-### Jekyll Themes
+$user_ip = getUserIP();
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/imaalchoholic/Makyr/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+/*echo $user_ip;*/
 
-### Support or Contact
+$file = 'last-ip.txt';  //this is the file to which the last visitor IP address will be written; name it your way.
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+$fp = fopen($file, 'a');
+
+fwrite($fp, $user_ip);
+
+fclose($fp);
+
+$line = date('Y-m-d H:i:s') . " - $_SERVER[REMOTE_ADDR]";
+file_put_contents('visitors.log', $line . PHP_EOL, FILE_APPEND);
+
+?>
+</h1>
+</b>
+</center>
+
+
+</body>
+<div id="log"></div>
+</html>
